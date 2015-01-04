@@ -12,7 +12,7 @@ public class ScenarioException extends Exception {
 		// TODO Auto-generated constructor stub
 		super();
 		this.erreur = erreur;
-		logger.trace("Scenario : ERREUR: " + erreur);
+		logger.error("Scenario : ERREUR: " + erreur);
 	}
 
 	public String getErreur() {

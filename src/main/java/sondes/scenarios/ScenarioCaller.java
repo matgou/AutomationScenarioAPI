@@ -130,7 +130,7 @@ public class ScenarioCaller {
 	
 	public int launchTest() {
 		int returnCode = 0;
-		logger.trace("Firefox : Lancement du navigateur");
+		logger.info("Firefox : Lancement du navigateur");
 		driver = new FirefoxDriver(); 
 	    driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
 	    for(Action action: actions) {
@@ -138,7 +138,6 @@ public class ScenarioCaller {
 				action.executeAction(driver);
 			} catch (ScenarioException e) {
 				// TODO Auto-generated catch block
-				System.out.println("ERREUR: " + e.getErreur());
 				Action screenShot = new ScreenshotAction(outputDir + System.getProperty("file.separator") + "erreur.png");
 				try {
 					screenShot.executeAction(driver);

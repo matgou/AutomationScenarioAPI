@@ -10,7 +10,7 @@ public abstract class Action {
 	private final Logger logger = LoggerFactory.getLogger(ScenarioException.class);
 	
 	protected void logEvent(String type, String trace) {
-		this.logger.trace(type + " : " + trace);
+		this.logger.info(type + " : " + trace);
 	}
 	public abstract void executeAction(WebDriver driver) throws ScenarioException ;
 }
