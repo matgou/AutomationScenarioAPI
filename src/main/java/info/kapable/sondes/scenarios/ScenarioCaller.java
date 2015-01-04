@@ -21,6 +21,7 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchWindowException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
+import org.openqa.selenium.firefox.FirefoxProfile;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -130,7 +131,9 @@ public class ScenarioCaller {
 	public int launchTest() {
 		int returnCode = 0;
 		logger.info("Firefox : Lancement du navigateur");
-		driver = new FirefoxDriver(); 
+		FirefoxProfile profile=new FirefoxProfile();
+		profile.setAssumeUntrustedCertificateIssuer(false);
+		FirefoxDriver driver=new FirefoxDriver(profile);
 	    driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
 	    for(Action action: actions) {
 	    	try {
