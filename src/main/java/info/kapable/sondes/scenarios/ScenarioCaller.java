@@ -1,4 +1,7 @@
-package sondes.scenarios;
+package info.kapable.sondes.scenarios;
+
+import info.kapable.sondes.scenarios.action.Action;
+import info.kapable.sondes.scenarios.action.ScreenshotAction;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -18,12 +21,8 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchWindowException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import sondes.scenarios.action.Action;
-import sondes.scenarios.action.ScreenshotAction;
 
 public class ScenarioCaller {
 	protected static WebDriver driver;

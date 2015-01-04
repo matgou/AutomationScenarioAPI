@@ -1,4 +1,4 @@
-package sondes.scenarios.action;
+package info.kapable.sondes.scenarios.action;
 
 import org.openqa.selenium.WebDriver;
 

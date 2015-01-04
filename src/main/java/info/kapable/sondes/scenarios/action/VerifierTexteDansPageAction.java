@@ -1,8 +1,8 @@
-package sondes.scenarios.action;
+package info.kapable.sondes.scenarios.action;
+
+import info.kapable.sondes.scenarios.ScenarioException;
 
 import org.openqa.selenium.WebDriver;
-
-import sondes.scenarios.ScenarioException;
 
 public class VerifierTexteDansPageAction extends Action {
 	protected String text;
@@ -15,7 +15,7 @@ public class VerifierTexteDansPageAction extends Action {
 	
 	@Override
 	public void executeAction(WebDriver driver) throws ScenarioException {
-		this.logEvent("Firefox", "Verification Texte présent :  "+text);
+		this.logEvent("Firefox", "Verification Texte prï¿½sent :  "+text);
 		if(!driver.getPageSource().contains(text))
 	    {
 	    	throw new ScenarioException("ERREUR: " + erreur);

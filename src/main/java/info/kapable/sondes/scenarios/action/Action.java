@@ -1,10 +1,10 @@
-package sondes.scenarios.action;
+package info.kapable.sondes.scenarios.action;
+
+import info.kapable.sondes.scenarios.ScenarioException;
 
 import org.openqa.selenium.WebDriver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import sondes.scenarios.ScenarioException;
 
 public abstract class Action {
 	private final Logger logger = LoggerFactory.getLogger(ScenarioException.class);

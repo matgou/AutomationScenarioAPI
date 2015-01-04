@@ -1,4 +1,4 @@
-package sondes.scenarios.action;
+package info.kapable.sondes.scenarios.action;
 
 import java.awt.AWTException;
 import java.awt.Dimension;

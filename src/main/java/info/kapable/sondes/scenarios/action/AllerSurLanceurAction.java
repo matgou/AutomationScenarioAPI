@@ -1,11 +1,11 @@
-package sondes.scenarios.action;
+package info.kapable.sondes.scenarios.action;
+
+import info.kapable.sondes.scenarios.ScenarioException;
 
 import org.openqa.selenium.WebDriver;
 
-import sondes.scenarios.ScenarioException;
-
 public class AllerSurLanceurAction extends Action {
-	protected String lanceur_url = "file:///P:/Echanges/Chorégie/mgoulin/public_html/index.html";
+	protected String lanceur_url = "file:///P:/Echanges/Chorï¿½gie/mgoulin/public_html/index.html";
 	
 	@Override
 	public void executeAction(WebDriver driver) throws ScenarioException {

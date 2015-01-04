@@ -1,8 +1,8 @@
-package sondes.scenarios.action;
+package info.kapable.sondes.scenarios.action;
+
+import info.kapable.sondes.scenarios.ScenarioException;
 
 import org.openqa.selenium.WebDriver;
-
-import sondes.scenarios.ScenarioException;
 
 public class LancerApplication extends Action {
 	protected String lanceur_url;
