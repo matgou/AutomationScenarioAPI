@@ -1,13 +1,9 @@
 package info.kapable.sondes.scenarios.action;
 
-import info.kapable.sondes.scenarios.ScenarioException;
-
 import java.util.Iterator;
 import java.util.Set;
 
 import org.openqa.selenium.WebDriver;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public class ActiverFenetreSuivanteAction extends Action {
 	

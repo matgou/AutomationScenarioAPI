@@ -11,6 +11,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -32,6 +33,7 @@ public class ScenarioCaller {
 	private static final Logger logger = LoggerFactory.getLogger(ScenarioCaller.class);
 	 
 	protected String outputDir = "./";
+	private HashMap<String, Object> EnvVarsBag;
 	
 	public String getOutputDir() {
 		return outputDir;
@@ -42,6 +44,11 @@ public class ScenarioCaller {
 	}
 
 	public ScenarioCaller ( String xml_cmd) {
+		EnvVarsBag = new HashMap<String, Object>();
+		this.actions = BuildAction(xml_cmd); 
+	}
+	public ScenarioCaller ( String xml_cmd, HashMap<String, Object> EnvVarsBag) {
+		this.EnvVarsBag = EnvVarsBag;
 		this.actions = BuildAction(xml_cmd); 
 	}
 	
@@ -89,7 +96,7 @@ public class ScenarioCaller {
 							String value = param.getAttribute("value").getValue();
 							params.add(By.class.getMethod(selector, String.class).invoke(By.class, value));
 						} else if(type.contentEquals("EnvVar")) {
-						// TODO
+							params.add(this.EnvVarsBag.get(param.getAttribute("value").getValue()));
 						}
 					}
 				}

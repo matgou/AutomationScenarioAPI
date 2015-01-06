@@ -13,12 +13,16 @@ public class AttendreAction extends Action {
 		}
 		
 	}
+	
 	@Override
 	public void executeAction(WebDriver driver) {
 		try {
-			Thread.sleep(time);
+			int max = (time /1000);
+			for (int i=0;i < max; i++ ){
+				Thread.sleep(1000);
+				this.logEvent("Attente", (i+1) + "/" + max);
+			}
 		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
