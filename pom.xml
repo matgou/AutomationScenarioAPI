@@ -5,7 +5,7 @@
 	<artifactId>AutomationScenarioAPI</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>AutomationScenarioAPI</name>
-	<description>Java API to execute scenario from an XML commande file</description>
+	<description>Java API to execute scenario from an XML command file</description>
 	<dependencies>
 		<dependency>
 			<groupId>org.seleniumhq.selenium</groupId>
@@ -20,12 +20,12 @@
 		<dependency>
 			<groupId>org.sikuli</groupId>
 			<artifactId>sikuli-api</artifactId>
-			<version>1.0.2</version>
+			<version>1.2.0</version>
 		</dependency>
 		<dependency>
 			<groupId>org.sikuli</groupId>
 			<artifactId>sikuli-core</artifactId>
-			<version>1.0.1</version>
+			<version>1.2.0</version>
 		</dependency>
 
 		<dependency>
@@ -44,11 +44,4 @@
 			<version>18.0</version>
 		</dependency>
 	</dependencies>
-	<repositories>
-		<repository>
-			<id>in-project</id>
-			<name>In Project Repo</name>
-			<url>file://${project.basedir}/libs</url>
-		</repository>
-	</repositories>
 </project>
