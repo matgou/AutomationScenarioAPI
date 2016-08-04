@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>info.kapable</groupId>
 	<artifactId>AutomationScenarioAPI</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>1.0.0</version>
 	<name>AutomationScenarioAPI</name>
 	<description>Java API to execute scenario from an XML command file</description>
 	<dependencies>
