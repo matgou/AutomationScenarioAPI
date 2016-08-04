@@ -1,3 +1,6 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+<?xml-stylesheet href="scenario.xsl" type="text/xsl"?>
 <Scenario>
 	<Action class="info.kapable.sondes.scenarios.action.LancerApplication">
 		<param value="http://www.google.com" />
@@ -8,7 +11,7 @@
 	
 	<Action class="info.kapable.sondes.scenarios.action.VerifierTexteDansPageAction">
 		<param value="Google" />
-		<param value="problÃ¨me Internet" />
+		<param value="problème Internet" />
 	</Action>
 	<Action class="info.kapable.sondes.scenarios.action.ScreenshotAction">
 		<param value="screenshoot1.png" />
