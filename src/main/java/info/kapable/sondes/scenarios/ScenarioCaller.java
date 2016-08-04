@@ -4,6 +4,7 @@ import info.kapable.sondes.scenarios.action.Action;
 import info.kapable.sondes.scenarios.action.ScreenshotAction;
 
 import java.io.ByteArrayInputStream;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
@@ -21,6 +22,7 @@ import org.jdom.input.SAXBuilder;
 import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchWindowException;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.firefox.FirefoxBinary;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.firefox.FirefoxProfile;
 import org.slf4j.Logger;
@@ -29,12 +31,12 @@ import org.slf4j.LoggerFactory;
 public class ScenarioCaller {
 	protected static WebDriver driver;
 	protected ArrayList<Action> actions;
-	
+
 	private static final Logger logger = LoggerFactory.getLogger(ScenarioCaller.class);
-	 
+
 	protected String outputDir = "./";
 	private HashMap<String, Object> EnvVarsBag;
-	
+
 	public String getOutputDir() {
 		return outputDir;
 	}
@@ -43,29 +45,70 @@ public class ScenarioCaller {
 		this.outputDir = outputDir;
 	}
 
-	public ScenarioCaller ( String xml_cmd) {
+	public ScenarioCaller(String xml_cmd) throws ScenarioParsingException {
 		EnvVarsBag = new HashMap<String, Object>();
-		this.actions = BuildAction(xml_cmd); 
+		this.actions = BuildAction(xml_cmd);
 	}
-	public ScenarioCaller ( String xml_cmd, HashMap<String, Object> EnvVarsBag) {
-		this.EnvVarsBag = EnvVarsBag;
-		this.actions = BuildAction(xml_cmd); 
-	}
-	
-	public ScenarioCaller ( String xml_path, String encoding) {
+
+	public ScenarioCaller(String xml_path, HashMap<String, Object> EnvVarsBag, String encoding) throws ScenarioParsingException {
 		byte[] encoded;
 		try {
 			encoded = Files.readAllBytes(Paths.get(xml_path));
 			String xml_cmd = new String(encoded, encoding);
-
-			this.actions = BuildAction(xml_cmd); 
+			
+			this.EnvVarsBag = EnvVarsBag;
+			this.actions = BuildAction(xml_cmd);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
+
+	public ScenarioCaller(String xml_path, String encoding) throws ScenarioParsingException {
+		byte[] encoded;
+		try {
+			encoded = Files.readAllBytes(Paths.get(xml_path));
+			String xml_cmd = new String(encoded, encoding);
+
+			this.actions = BuildAction(xml_cmd);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+
+	private Action xmlToAction(Element action) throws InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, SecurityException, NoSuchMethodException, ClassNotFoundException
+	{
+		String className = action.getAttribute("class").getValue();
+		Class ActionClass = Class.forName(className);
+		List<Object> params = new ArrayList<Object>();	
+		List<Element> paramsXML = action.getChildren("param");
+		for (Element param : paramsXML) {
+			if (param.getAttribute("type") == null) {
+				params.add(param.getAttribute("value").getValue());
+			} else {
+				String type = param.getAttribute("type").getValue();
+				if (type.contentEquals("By")) {
+					String selector = param.getAttribute("selector").getValue();
+					String value = param.getAttribute("value").getValue();
+					params.add(By.class.getMethod(selector, String.class).invoke(By.class, value));
+				} else if (type.contentEquals("EnvVar")) {
+					params.add(this.EnvVarsBag.get(param.getAttribute("value").getValue()));
+				}
+				if (type.contentEquals("then") || type.contentEquals("else")) {
+					List<Action> subActions = new ArrayList<Action>();
+					List<Element> subActionsXML = param.getChildren("Action");
+					for(Element subActionXML : subActionsXML) {
+						subActions.add(xmlToAction(subActionXML));
+					}
+					params.add(subActions);
+				}
+			}
+		}
+		return (Action) ActionClass.getConstructors()[0].newInstance(params.toArray());	
+	}
 	
-	private ArrayList<Action> BuildAction(String xml_cmd) {
+	private ArrayList<Action> BuildAction(String xml_cmd) throws ScenarioParsingException {
 		// TODO Auto-generated method stub
 		ArrayList<Action> actions = new ArrayList<Action>();
 		InputStream stream;
@@ -76,78 +119,73 @@ public class ScenarioCaller {
 			e1.printStackTrace();
 			return actions;
 		}
-	    SAXBuilder sxb = new SAXBuilder();
-	      try {
+		SAXBuilder sxb = new SAXBuilder();
+		try {
 			org.jdom.Document document = sxb.build(stream);
 			Element racine = document.getRootElement();
 			List<Element> actionsXML = racine.getChildren("Action");
-			for(Element action: actionsXML) {
-				String className = action.getAttribute("class").getValue();
-				Class ActionClass = Class.forName(className);
-				List<Element> paramsXML = action.getChildren("param");
-				List<Object> params = new ArrayList<Object>();
-				for(Element param: paramsXML) {
-					if(param.getAttribute("type") == null) {
-						params.add(param.getAttribute("value").getValue());
-					}else {
-						String type= param.getAttribute("type").getValue();
-						if(type.contentEquals("By")) {
-							String selector = param.getAttribute("selector").getValue();
-							String value = param.getAttribute("value").getValue();
-							params.add(By.class.getMethod(selector, String.class).invoke(By.class, value));
-						} else if(type.contentEquals("EnvVar")) {
-							params.add(this.EnvVarsBag.get(param.getAttribute("value").getValue()));
-						}
-					}
-				}
-				actions.add((Action) ActionClass.getConstructors()[0].newInstance(params.toArray()));
+			for (Element action : actionsXML) {
+				Action actionToAdd = xmlToAction(action);
+				actions.add(actionToAdd);
 			}
 		} catch (JDOMException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
+			throw new ScenarioParsingException(e.getCause());
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
+			throw new ScenarioParsingException(e.getCause());
 		} catch (InstantiationException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
+			throw new ScenarioParsingException(e.getCause());
 		} catch (IllegalAccessException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
-		} catch (ClassNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			throw new ScenarioParsingException(e.getCause());
 		} catch (IllegalArgumentException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
+			throw new ScenarioParsingException(e.getCause());
 		} catch (InvocationTargetException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
+			throw new ScenarioParsingException(e.getCause());
 		} catch (NoSuchMethodException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
+			throw new ScenarioParsingException(e.getCause());
 		} catch (SecurityException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
+			throw new ScenarioParsingException(e.getCause());
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+			throw new ScenarioParsingException(e.getCause());
 		}
-		
 
 		return actions;
 	}
-	
+
 	public int launchTest() {
+		return launchTest(null);
+	}
+	
+	public int launchTest(String firefoxPath) {
+		FirefoxDriver driver;
+		FirefoxBinary binary;
+		FirefoxProfile profile = new FirefoxProfile();
+		
 		int returnCode = 0;
 		logger.info("Firefox : Lancement du navigateur");
-		FirefoxProfile profile=new FirefoxProfile();
 		profile.setAssumeUntrustedCertificateIssuer(false);
-		FirefoxDriver driver=new FirefoxDriver(profile);
-	    driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
-	    for(Action action: actions) {
-	    	try {
+		if(firefoxPath == null) {
+			driver = new FirefoxDriver(profile);
+		} else {
+			binary = new FirefoxBinary(new File(firefoxPath));
+			driver = new FirefoxDriver(binary, profile);
+		}
+		driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
+		for (Action action : actions) {
+			try {
 				action.executeAction(driver);
 			} catch (ScenarioException e) {
 				// TODO Auto-generated catch block
-				Action screenShot = new ScreenshotAction(outputDir + System.getProperty("file.separator") + "erreur.png");
+				Action screenShot = new ScreenshotAction(
+						outputDir + System.getProperty("file.separator") + "erreur.png");
 				try {
 					screenShot.executeAction(driver);
 				} catch (ScenarioException e1) {
@@ -155,14 +193,14 @@ public class ScenarioCaller {
 				returnCode = 2;
 				break;
 			}
-	    }
-		
-	    try {
-	    	driver.close();
-	    } catch (NoSuchWindowException e) {
-	    	
-	    }
-	    driver.quit();
-	    return returnCode;
+		}
+
+		try {
+			driver.close();
+		} catch (NoSuchWindowException e) {
+
+		}
+		driver.quit();
+		return returnCode;
 	}
 }

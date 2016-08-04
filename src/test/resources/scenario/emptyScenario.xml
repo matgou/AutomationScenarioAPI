@@ -1,14 +1,26 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-
-<?xml-stylesheet href="scenario.xsl" type="text/xsl"?>
 <Scenario>
 	<Action class="info.kapable.sondes.scenarios.action.LancerApplication">
-		<param value="http://www.google.com" />
+		<param type="EnvVar" value="index" />
 	</Action>
 	<Action class="info.kapable.sondes.scenarios.action.AttendreAction">
 		<param value="2000" />
 	</Action>
-	
+	<Action class="info.kapable.sondes.scenarios.action.IfAction">
+		<param value="un texte" />
+		<param type="then">
+			<Action class="info.kapable.sondes.scenarios.action.SaisirTexteAction">
+				<param type="By" selector="id" value="myForm" />
+				<param value="conditionTrouve" />
+			</Action>
+		</param>
+		<param type="else">
+			<Action class="info.kapable.sondes.scenarios.action.SaisirTexteAction">
+				<param type="By" selector="id" value="myForm" />
+				<param value="conditionNonTrouve" />
+			</Action>
+		</param>
+	</Action>
 	<Action class="info.kapable.sondes.scenarios.action.VerifierTexteDansPageAction">
 		<param value="Google" />
 		<param value="problème Internet" />

@@ -3,10 +3,12 @@ package info.kapable.sondes.test.scenarios;
 import static org.junit.Assert.*;
 
 import java.net.URL;
+import java.util.HashMap;
 
 import org.junit.Test;
 
 import info.kapable.sondes.scenarios.ScenarioCaller;
+import info.kapable.sondes.scenarios.ScenarioParsingException;
 
 public class ScenarioCallerTest {
 
@@ -14,9 +16,18 @@ public class ScenarioCallerTest {
 	public void emptyTest() {
 		String scenarioFilePath =  this.getClass().getClassLoader().getResource("scenario/emptyScenario.xml").getPath();
 		String osAppropriatePath = System.getProperty( "os.name" ).contains( "indow" ) ? scenarioFilePath.substring(1) : scenarioFilePath;
-		ScenarioCaller caller = new ScenarioCaller(osAppropriatePath, "UTF-8");
-		int returnCode = caller.launchTest();
-		assertTrue(returnCode == 0);
+		ScenarioCaller caller;
+		String index_html = this.getClass().getClassLoader().getResource("index.html").getPath();
+		HashMap<String, Object> map = new HashMap<String, Object>();
+		map.put("index", "file://" + index_html);
+		try {
+			caller = new ScenarioCaller(osAppropriatePath, map, "UTF-8");
+			int returnCode = caller.launchTest();
+			assertTrue(returnCode == 0);
+		} catch (ScenarioParsingException e) {
+			e.printStackTrace();
+			fail("ScenarioParsingException raise");
+		}
 	}
 
 }
