@@ -2,7 +2,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>info.kapable</groupId>
 	<artifactId>AutomationScenarioAPI</artifactId>
-	<version>1.0.0</version>
+	<version>1.0.0-SNAPSHOT</version>
 	<name>AutomationScenarioAPI</name>
 	<description>Java API to execute scenario from an XML command file</description>
 	<url>http://github.com/matgou/AutomationScenarioAPI</url>
@@ -20,7 +20,7 @@
 	</developers>
 	<scm>
 		<connection>scm:git:git://github.com/matgou/AutomationScenarioAPI.git</connection>
-		<developerConnection>scm:git:ssh://github.com:matgou/AutomationScenarioAPI.git</developerConnection>
+		<developerConnection>scm:git:ssh://git@github.com:matgou/AutomationScenarioAPI.git</developerConnection>
 		<url>http://github.com/matgou/AutomationScenarioAPI/tree/master</url>
 	  <tag>AutomationScenarioAPI-1.0.0</tag>
   </scm>
