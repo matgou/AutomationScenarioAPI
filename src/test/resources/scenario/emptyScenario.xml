@@ -1,0 +1,19 @@
+<Scenario>
+	<Action class="info.kapable.sondes.scenarios.action.LancerApplication">
+		<param value="http://www.google.com" />
+	</Action>
+	<Action class="info.kapable.sondes.scenarios.action.AttendreAction">
+		<param value="2000" />
+	</Action>
+	
+	<Action class="info.kapable.sondes.scenarios.action.VerifierTexteDansPageAction">
+		<param value="Google" />
+		<param value="problÃ¨me Internet" />
+	</Action>
+	<Action class="info.kapable.sondes.scenarios.action.ScreenshotAction">
+		<param value="screenshoot1.png" />
+	</Action>
+	<Action class="info.kapable.sondes.scenarios.action.AttendreAction">
+		<param value="2000" />
+	</Action>
+</Scenario>
