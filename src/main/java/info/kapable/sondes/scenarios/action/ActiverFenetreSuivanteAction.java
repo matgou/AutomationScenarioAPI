@@ -6,16 +6,17 @@ import java.util.Set;
 import org.openqa.selenium.WebDriver;
 
 public class ActiverFenetreSuivanteAction extends Action {
-	
+
 	@Override
 	public void executeAction(WebDriver driver) {
 		this.logEvent("Firefox", "Changement de fenetre");
-		Set<String> windowId = driver.getWindowHandles();    // get  window id of current window
-        Iterator<String> itererator = windowId.iterator();   
+		Set<String> windowId = driver.getWindowHandles(); // get window id of
+															// current window
+		Iterator<String> itererator = windowId.iterator();
 
-        itererator.next();
-        String  newAdwinID = itererator.next();
+		itererator.next();
+		String newAdwinID = itererator.next();
 
-        driver.switchTo().window(newAdwinID);
+		driver.switchTo().window(newAdwinID);
 	}
 }

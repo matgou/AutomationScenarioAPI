@@ -20,8 +20,7 @@ public class ScreenshotAction extends Action {
 		this.name = name;
 	}
 
-	private void takePictureOfError(String Name) throws IOException,
-			AWTException {
+	private void takePictureOfError(String Name) throws IOException, AWTException {
 		new File("Errors").mkdir();
 		Toolkit toolkit = Toolkit.getDefaultToolkit();
 		Dimension screenSize = toolkit.getScreenSize();
@@ -38,7 +37,7 @@ public class ScreenshotAction extends Action {
 			this.takePictureOfError(this.name);
 		} catch (IOException e) {
 			this.logEvent("Error", "Error when saving image " + this.name + " : " + e.getMessage());
-		} catch (AWTException e) { 
+		} catch (AWTException e) {
 			this.logEvent("Error", "Error when making the screenshoot : " + e.getMessage());
 		}
 	}
