@@ -22,8 +22,8 @@
 		</param>
 	</Action>
 	<Action class="info.kapable.sondes.scenarios.action.VerifierTexteDansPageAction">
-		<param value="Google" />
-		<param value="problème Internet" />
+		<param value="un texte" />
+		<param value="probleme dans la page" />
 	</Action>
 	<Action class="info.kapable.sondes.scenarios.action.ScreenshotAction">
 		<param value="screenshoot1.png" />
