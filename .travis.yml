@@ -1,11 +1,11 @@
 language: java
-install: DISPLAY=:99.0 mvn install -Dgpg.skip=true
 addons:
   firefox: "latest-esr"
-before_script:
+before_install:
   - "export DISPLAY=:99.0"
   - "sh -e /etc/init.d/xvfb start"
   - sleep 3 # give xvfb some time to start
+install: DISPLAY=:99.0 mvn install -Dgpg.skip=true
 notifications:
   email:
   - mathieu.goulin@gadz.org
