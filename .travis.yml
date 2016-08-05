@@ -1,11 +1,25 @@
 language: java
+
+
+env:
+  global:
+    - SONATYPE_USERNAME=matgou
+    - secure: "BFjRMVDx6eF3yATDumAxlb2WtJrNV228OgFIpuzBo+wbX72B49tCsJJ+kQorsvH2rJnCf7qvvD5pfNzMtbWJL3roZZscXmoPxRq4SSMY2KCHwzno8hq5VmCjSVgrbB+DtknJVI+CidLoHhWxBSk5SoYd/bkaYof8JPSjYrGv8uo="
+
 addons:
   firefox: "latest-esr"
+
 before_install:
   - "export DISPLAY=:99.0"
   - "sh -e /etc/init.d/xvfb start"
   - sleep 3 # give xvfb some time to start
+
 install: DISPLAY=:99.0 mvn install -Dgpg.skip=true
+
 notifications:
   email:
   - mathieu.goulin@gadz.org
+
+after_success:
+  - python addServer.py
+  - mvn clean deploy --settings settings.xml
