@@ -6,3 +6,6 @@ AutomationScenarios
 Java API module to execute scenario from an XML command file
 
 XML Example : src/test/resources/scenario/emptyScenario.xml
+
+To build just run
+  mvn clean install package assembly:assembly -Dplatform.dependencies=true

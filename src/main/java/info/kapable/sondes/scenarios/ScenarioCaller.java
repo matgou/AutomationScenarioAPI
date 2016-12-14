@@ -14,6 +14,7 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 import org.jdom.Element;
@@ -38,7 +39,7 @@ public class ScenarioCaller {
 	public static final int IE = 2;
 	
 	protected String outputDir = "./";
-	private HashMap<String, Object> EnvVarsBag;
+	private Map<String, Object> EnvVarsBag;
 	private int navigator = 1;
 
 	public String getOutputDir() {
@@ -53,11 +54,11 @@ public class ScenarioCaller {
 		EnvVarsBag = new HashMap<String, Object>();
 		this.actions = BuildAction(xml_cmd);
 	}
-	public ScenarioCaller(String xml_path, HashMap<String, Object> EnvVarsBag, String encoding) throws ScenarioParsingException {
+	public ScenarioCaller(String xml_path, Map<String, Object> EnvVarsBag, String encoding) throws ScenarioParsingException {
 		this(xml_path, EnvVarsBag, encoding, ScenarioCaller.FIREFOX);
 	}
 	
-	public ScenarioCaller(String xml_path, HashMap<String, Object> EnvVarsBag, String encoding, int navigator) throws ScenarioParsingException {
+	public ScenarioCaller(String xml_path, Map<String, Object> EnvVarsBag, String encoding, int navigator) throws ScenarioParsingException {
 		byte[] encoded;
 		try {
 			encoded = Files.readAllBytes(Paths.get(xml_path));
