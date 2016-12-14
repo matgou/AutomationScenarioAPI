@@ -36,23 +36,27 @@ public class ScenarioCallerTest {
 	}
 	@Test
 	public void emptyTestIE() {
-		String scenarioFilePath =  this.getClass().getClassLoader().getResource("scenario/emptyScenario.xml").getPath();
-		String osAppropriatePath = System.getProperty( "os.name" ).contains( "indow" ) ? scenarioFilePath.substring(1) : scenarioFilePath;
-		ScenarioCaller caller;
-		String index_html = this.getClass().getClassLoader().getResource("index.html").getPath();
-		HashMap<String, Object> map = new HashMap<String, Object>();
-		map.put("index", "file://" + index_html);
-		try {
-			caller = new ScenarioCaller(osAppropriatePath, map, "UTF-8", ScenarioCaller.IE);
-			int returnCode = caller.launchTest();
-			assertTrue(returnCode == 0);
-		} catch (ScenarioParsingException e) {
-			e.printStackTrace();
-			fail("ScenarioParsingException raise");
-		} catch (UnsuportedNavigatorException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			fail("UnsuportedNavigatorException raise");
+		if(System.getProperty( "os.name" ).contains( "indow" )) {
+			String scenarioFilePath =  this.getClass().getClassLoader().getResource("scenario/emptyScenario.xml").getPath();
+			String osAppropriatePath = System.getProperty( "os.name" ).contains( "indow" ) ? scenarioFilePath.substring(1) : scenarioFilePath;
+			ScenarioCaller caller;
+			String index_html = this.getClass().getClassLoader().getResource("index.html").getPath();
+			HashMap<String, Object> map = new HashMap<String, Object>();
+			map.put("index", "file://" + index_html);
+			try {
+				caller = new ScenarioCaller(osAppropriatePath, map, "UTF-8", ScenarioCaller.IE);
+				int returnCode = caller.launchTest();
+				assertTrue(returnCode == 0);
+			} catch (ScenarioParsingException e) {
+				e.printStackTrace();
+				fail("ScenarioParsingException raise");
+			} catch (UnsuportedNavigatorException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+				fail("UnsuportedNavigatorException raise");
+			}
+		} else {
+			assertTrue(true);
 		}
 	}
 }
