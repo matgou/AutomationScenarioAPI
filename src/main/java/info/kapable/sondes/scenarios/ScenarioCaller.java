@@ -54,6 +54,13 @@ public class ScenarioCaller {
 		EnvVarsBag = new HashMap<String, Object>();
 		this.actions = BuildAction(xml_cmd);
 	}
+
+	public ScenarioCaller(String xml_cmd, Map<String,Object> EnvVarsBag, int navigator) throws ScenarioParsingException {
+		this.EnvVarsBag = EnvVarsBag;
+		this.navigator = navigator;
+		this.actions = BuildAction(xml_cmd);
+	}
+	
 	public ScenarioCaller(String xml_path, Map<String, Object> EnvVarsBag, String encoding) throws ScenarioParsingException {
 		this(xml_path, EnvVarsBag, encoding, ScenarioCaller.FIREFOX);
 	}
