@@ -14,6 +14,7 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 import org.jdom.Element;
@@ -25,6 +26,7 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.firefox.FirefoxBinary;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.firefox.FirefoxProfile;
+import org.openqa.selenium.ie.InternetExplorerDriver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -33,9 +35,12 @@ public class ScenarioCaller {
 	protected ArrayList<Action> actions;
 
 	private static final Logger logger = LoggerFactory.getLogger(ScenarioCaller.class);
-
+	public static final int FIREFOX = 1;
+	public static final int IE = 2;
+	
 	protected String outputDir = "./";
-	private HashMap<String, Object> EnvVarsBag;
+	private Map<String, Object> EnvVarsBag;
+	private int navigator = 1;
 
 	public String getOutputDir() {
 		return outputDir;
@@ -50,7 +55,17 @@ public class ScenarioCaller {
 		this.actions = BuildAction(xml_cmd);
 	}
 
-	public ScenarioCaller(String xml_path, HashMap<String, Object> EnvVarsBag, String encoding) throws ScenarioParsingException {
+	public ScenarioCaller(String xml_cmd, Map<String,Object> EnvVarsBag, int navigator) throws ScenarioParsingException {
+		this.EnvVarsBag = EnvVarsBag;
+		this.navigator = navigator;
+		this.actions = BuildAction(xml_cmd);
+	}
+	
+	public ScenarioCaller(String xml_path, Map<String, Object> EnvVarsBag, String encoding) throws ScenarioParsingException {
+		this(xml_path, EnvVarsBag, encoding, ScenarioCaller.FIREFOX);
+	}
+	
+	public ScenarioCaller(String xml_path, Map<String, Object> EnvVarsBag, String encoding, int navigator) throws ScenarioParsingException {
 		byte[] encoded;
 		try {
 			encoded = Files.readAllBytes(Paths.get(xml_path));
@@ -58,6 +73,7 @@ public class ScenarioCaller {
 			
 			this.EnvVarsBag = EnvVarsBag;
 			this.actions = BuildAction(xml_cmd);
+			this.navigator = navigator;
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -76,7 +92,7 @@ public class ScenarioCaller {
 			e.printStackTrace();
 		}
 	}
-
+	
 	private Action xmlToAction(Element action) throws InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, SecurityException, NoSuchMethodException, ClassNotFoundException
 	{
 		String className = action.getAttribute("class").getValue();
@@ -160,24 +176,33 @@ public class ScenarioCaller {
 		return actions;
 	}
 
-	public int launchTest() {
+	public int launchTest() throws UnsuportedNavigatorException {
 		return launchTest(null);
 	}
 	
-	public int launchTest(String firefoxPath) {
-		FirefoxDriver driver;
-		FirefoxBinary binary;
-		FirefoxProfile profile = new FirefoxProfile();
-		
+	public int launchTest(String execPath) throws UnsuportedNavigatorException {
 		int returnCode = 0;
-		logger.info("Firefox : Lancement du navigateur");
-		profile.setAssumeUntrustedCertificateIssuer(false);
-		if(firefoxPath == null) {
-			driver = new FirefoxDriver(profile);
-		} else {
-			binary = new FirefoxBinary(new File(firefoxPath));
-			driver = new FirefoxDriver(binary, profile);
-		}
+		WebDriver driver = null;
+		if(this.navigator == ScenarioCaller.FIREFOX) {
+			FirefoxBinary binary;
+			FirefoxProfile profile = new FirefoxProfile();
+			
+			logger.info("Firefox : Lancement du navigateur");
+			profile.setAssumeUntrustedCertificateIssuer(false);
+			if(execPath == null) {
+				driver = new FirefoxDriver(profile);
+			} else {
+				binary = new FirefoxBinary(new File(execPath));
+				driver = new FirefoxDriver(binary, profile);
+			}
+		} else if (this.navigator == ScenarioCaller.IE) {
+			if(execPath != null) {
+				File file = new File(execPath);
+				System.setProperty("webdriver.ie.driver", file.getAbsolutePath());
+			}
+			driver = new InternetExplorerDriver();
+		} else throw new UnsuportedNavigatorException();
+				
 		driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
 		for (Action action : actions) {
 			try {
