@@ -1,5 +1,6 @@
 package info.kapable.sondes.scenarios;
 
+import info.kapable.sondes.drivers.CurlDriver;
 import info.kapable.sondes.scenarios.action.Action;
 import info.kapable.sondes.scenarios.action.ScreenshotAction;
 
@@ -20,6 +21,7 @@ import java.util.concurrent.TimeUnit;
 import org.jdom.Element;
 import org.jdom.JDOMException;
 import org.jdom.input.SAXBuilder;
+import org.jdom.output.XMLOutputter;
 import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchWindowException;
 import org.openqa.selenium.WebDriver;
@@ -37,6 +39,7 @@ public class ScenarioCaller {
 	private static final Logger logger = LoggerFactory.getLogger(ScenarioCaller.class);
 	public static final int FIREFOX = 1;
 	public static final int IE = 2;
+	public static final int DIRECT = 3;
 	
 	
 	protected String outputDir = "./";
@@ -95,7 +98,7 @@ public class ScenarioCaller {
 		}
 	}
 	
-	private Action xmlToAction(Element action) throws InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, SecurityException, NoSuchMethodException, ClassNotFoundException
+	private Action xmlToAction(Element action) throws InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, SecurityException, NoSuchMethodException, ClassNotFoundException, ScenarioParsingException
 	{
 		String className = action.getAttribute("class").getValue();
 		Class ActionClass = Class.forName(className);
@@ -111,7 +114,15 @@ public class ScenarioCaller {
 					String value = param.getAttribute("value").getValue();
 					params.add(By.class.getMethod(selector, String.class).invoke(By.class, value));
 				} else if (type.contentEquals("EnvVar")) {
-					params.add(this.EnvVarsBag.get(param.getAttribute("value").getValue()));
+					Object value = this.EnvVarsBag.get(param.getAttribute("value").getValue());
+					if(value == null) {
+						throw new ScenarioParsingException("No environement variable (" + param.getAttribute("value").getValue() + ") found!");
+					}
+					params.add(value);
+				} else if (type.contentEquals("raw")) {
+					XMLOutputter outp = new XMLOutputter();
+					String s = outp.outputString(param.getChildren());
+					params.add(s);
 				}
 				if (type.contentEquals("then") || type.contentEquals("else")) {
 					List<Action> subActions = new ArrayList<Action>();
@@ -203,6 +214,8 @@ public class ScenarioCaller {
 				System.setProperty("webdriver.ie.driver", file.getAbsolutePath());
 			}
 			driver = new InternetExplorerDriver();
+		} else if (this.navigator == ScenarioCaller.DIRECT) {
+			driver = new CurlDriver();
 		} else throw new UnsuportedNavigatorException();
 				
 		driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
