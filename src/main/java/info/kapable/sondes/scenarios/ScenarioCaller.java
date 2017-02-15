@@ -38,10 +38,12 @@ public class ScenarioCaller {
 	public static final int FIREFOX = 1;
 	public static final int IE = 2;
 	
+	
 	protected String outputDir = "./";
 	private Map<String, Object> EnvVarsBag;
 	private int navigator = 1;
-
+	private File outputStatisticFile = null;
+	
 	public String getOutputDir() {
 		return outputDir;
 	}
@@ -206,7 +208,7 @@ public class ScenarioCaller {
 		driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
 		for (Action action : actions) {
 			try {
-				action.executeAction(driver);
+				action.executeAction(driver, this.outputStatisticFile);
 			} catch (ScenarioException e) {
 				// TODO Auto-generated catch block
 				Action screenShot = new ScreenshotAction(
@@ -228,4 +230,9 @@ public class ScenarioCaller {
 		driver.quit();
 		return returnCode;
 	}
+
+	public void setOutputStatisticFile(File outputStatisticFile) {
+		this.outputStatisticFile = outputStatisticFile;
+	}
+
 }

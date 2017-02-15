@@ -14,6 +14,10 @@ public class IEScenario {
 
 	public static void main(String[] args) {
 		File file = new File(args[0]);
+		File statisticsFile = null;
+		if(args.length > 1) {
+			statisticsFile = new File(args[1]);
+		}
 		String scenarioFilePath =  file.getAbsolutePath();
 		
 		ScenarioCaller caller;
@@ -24,6 +28,9 @@ public class IEScenario {
 		}
 		try {
 			caller = new ScenarioCaller(scenarioFilePath, map, "UTF-8", ScenarioCaller.IE);
+			if(statisticsFile != null) {
+				caller.setOutputStatisticFile(statisticsFile);
+			}
 			int returnCode = caller.launchTest();
 			assertTrue(returnCode == 0);
 		} catch (ScenarioParsingException e) {

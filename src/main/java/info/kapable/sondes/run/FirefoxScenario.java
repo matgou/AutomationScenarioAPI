@@ -14,6 +14,10 @@ public class FirefoxScenario {
 
 	public static void main(String[] args) {
 		File file = new File(args[0]);
+		File statisticsFile = null;
+		if(args.length > 1) {
+			statisticsFile = new File(args[1]);
+		}
 		String scenarioFilePath =  file.getAbsolutePath();
 		
 		ScenarioCaller caller;
@@ -24,15 +28,18 @@ public class FirefoxScenario {
 		}
 		try {
 			caller = new ScenarioCaller(scenarioFilePath, map, "UTF-8", ScenarioCaller.FIREFOX);
+			if(statisticsFile != null) {
+				caller.setOutputStatisticFile(statisticsFile);
+			}
 			int returnCode = caller.launchTest();
-			assertTrue(returnCode == 0);
+			System.exit(returnCode);
 		} catch (ScenarioParsingException e) {
 			e.printStackTrace();
-			fail("ScenarioParsingException raise");
+			System.exit(255);
 		} catch (UnsuportedNavigatorException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-			fail("UnsuportedNavigatorException raise");
+			System.exit(255);
 		}
 	}
 
