@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<Scenario>
+	<Action class="info.kapable.sondes.scenarios.action.DoPostAction">
+		<param type="EnvVar" value="index" />
+		<param value="Hello World"></param>
+	</Action>
+	<Action class="info.kapable.sondes.scenarios.action.AttendreAction">
+		<param value="2000" />
+	</Action>
+	<Action class="info.kapable.sondes.scenarios.action.VerifierTexteDansPageAction">
+		<param value="HTTPEchoServerTest"></param>
+		<param value="Texte non trouvé"></param>
+	</Action>
+</Scenario>
