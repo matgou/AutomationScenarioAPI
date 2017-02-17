@@ -106,7 +106,13 @@ public class ScenarioCaller {
 		List<Element> paramsXML = action.getChildren("param");
 		for (Element param : paramsXML) {
 			if (param.getAttribute("type") == null) {
-				params.add(param.getAttribute("value").getValue());
+				if(param.getAttribute("value") != null) {
+					params.add(param.getAttribute("value").getValue());
+				} else {
+					XMLOutputter outp = new XMLOutputter();
+					String s = outp.outputString(param.getChildren());
+					params.add(s);
+				}
 			} else {
 				String type = param.getAttribute("type").getValue();
 				if (type.contentEquals("By")) {
