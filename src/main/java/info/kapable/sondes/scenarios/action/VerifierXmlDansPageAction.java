@@ -66,11 +66,11 @@ public class VerifierXmlDansPageAction extends Action {
 				
 	        	if(noeudCourantString.compareTo(xmlString) != 0) {
 	        		this.logEvent("XML Verification","Attendu" + xmlString);
-	        		this.logEvent("XML Verification","Trouvé" + noeudCourantString);
+	        		this.logEvent("XML Verification","Trouve" + noeudCourantString);
 	    			throw new ScenarioException("ERREUR: " + erreur);        		
 	        	} else {
 	        		this.logEvent("XML Verification","Attendu : " + xmlString);
-	        		this.logEvent("XML Verification","Trouvé : " + noeudCourantString);
+	        		this.logEvent("XML Verification","Trouve : " + noeudCourantString);
 	        		this.logEvent("XML Verification","Verification OK");
 	        	}
 	        }
