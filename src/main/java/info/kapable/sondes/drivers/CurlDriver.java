@@ -14,6 +14,10 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.impl.client.HttpClientBuilder;
+import org.apache.http.params.BasicHttpParams;
+import org.apache.http.params.HttpConnectionParams;
+import org.apache.http.params.HttpParams;
 import org.jdom.Document;
 import org.jdom.input.SAXBuilder;
 import org.openqa.selenium.By;
@@ -122,8 +126,9 @@ public class CurlDriver implements WebDriver {
 
 	public void post(String url, String raw) {
 		// TODO Auto-generated method stub
-
-		HttpClient client = new DefaultHttpClient();
+		
+		HttpClient client = HttpClientBuilder.create().build();
+		
 	    HttpPost post = new HttpPost(url);
 	    try {
 			post.setEntity(new StringEntity(raw));
