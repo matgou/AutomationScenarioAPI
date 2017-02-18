@@ -8,6 +8,7 @@ Java API module to execute a test scenario described in XML command file
 
 XML Example : src/test/resources/scenario/emptyScenario.xml
 
+You can download the lastest release : https://github.com/matgou/AutomationScenarioAPI/releases/latest
 ## Usage
 To build just run :
 ```
