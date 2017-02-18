@@ -19,10 +19,14 @@ notifications:
 after_success:
 - python addServer.py
 - mvn clean deploy --settings settings.xml
+
+before_deploy:
+- mvn -Dmaven.test.skip=true package install
 deploy:
+  skip_cleanup: true
   provider: releases
   api_key:
     secure: Q+J8CmF3o28/VMg6BP40vaofduJfEWRHDA1c6aZiJqCx/CjZdis4JjUXYJ6V6H9EI5SuxxD5zlHrOoZQZOqzhR+n3i0Aevg+TAYfBqiEpFJBmCZfEocIiiprAA+GPLYqICq5v2a5DbbOCIkSyH1IB2nWKqxVZQ4mcsxlHdtBM9k=
-  file: target/batch_run.jar
+  file: target/batch_run.jar-jar-with-dependencies.jar
   on:
     repo: matgou/AutomationScenarioAPI
