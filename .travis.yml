@@ -1,6 +1,8 @@
 language: java
 
-
+jdk:
+  - oraclejdk8
+  
 env:
   global:
     - SONATYPE_USERNAME=matgou
