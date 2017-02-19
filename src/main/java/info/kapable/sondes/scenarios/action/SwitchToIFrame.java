@@ -17,4 +17,9 @@ public class SwitchToIFrame extends Action {
 		WebElement iframeElem = driver.findElement(this.by);
 		driver.switchTo().frame(iframeElem);
 	}
+
+	@Override
+	public String getDescription() {
+		return "Aller sur l'iframe";
+	}
 }

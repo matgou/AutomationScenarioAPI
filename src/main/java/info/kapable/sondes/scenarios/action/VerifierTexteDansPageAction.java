@@ -16,9 +16,17 @@ public class VerifierTexteDansPageAction extends Action {
 	@Override
 	public void executeAction(WebDriver driver) throws ScenarioException {
 		this.logEvent("Firefox", "Verification Texte prï¿½sent :  " + text);
+		if(driver.getPageSource() == null) {
+			throw new ScenarioException("ERREUR: Pas de données dans la derniere page");
+		}
 		if (!driver.getPageSource().contains(text)) {
 			throw new ScenarioException("ERREUR: " + erreur);
 		}
+	}
+
+	@Override
+	public String getDescription() {
+		return "Verifier que le texte suivant est sur la page : " + this.text;
 	}
 
 }

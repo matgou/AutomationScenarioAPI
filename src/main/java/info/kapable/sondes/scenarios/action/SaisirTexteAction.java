@@ -19,6 +19,10 @@ public class SaisirTexteAction extends Action {
 		WebElement textElem = driver.findElement(by);
 		textElem.clear();
 		textElem.sendKeys(text);
+	}
 
+	@Override
+	public String getDescription() {
+		return "Saisir le texte : '" + this.text + "' dans le champ : " + by.toString();
 	}
 }

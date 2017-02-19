@@ -19,7 +19,7 @@ import info.kapable.sondes.scenarios.ScenarioParsingException;
 import info.kapable.sondes.scenarios.UnsuportedNavigatorException;
 
 public class HTTPEchoServerTest {
-	static final int port = 8080;
+	public static int port = 60900;
 
 	@Test
 	public void test() {
@@ -28,6 +28,7 @@ public class HTTPEchoServerTest {
 				ServerSocket s;
 				try {
 					s = new ServerSocket(port);
+					HTTPEchoServerTest.port = s.getLocalPort();
 					Socket soc = s.accept();
 
 					// Un BufferedReader permet de lire par ligne.

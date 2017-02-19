@@ -111,4 +111,9 @@ public class SaisirTexteDesktopAction extends Action {
 		}
 	}
 
+	@Override
+	public String getDescription() {
+		return "Saisir le texte : " + this.texte + ", dans le champs : <img src='" + this.imgPath + "'></img>";
+	}
+
 }

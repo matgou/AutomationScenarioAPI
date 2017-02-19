@@ -27,4 +27,9 @@ public class AttendreAction extends Action {
 		}
 	}
 
+	@Override
+	public String getDescription() {
+		return "Attendre " + (this.time /1000) + "secondes";
+	}
+
 }

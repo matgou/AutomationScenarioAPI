@@ -19,4 +19,9 @@ public class ActiverFenetreSuivanteAction extends Action {
 
 		driver.switchTo().window(newAdwinID);
 	}
+
+	@Override
+	public String getDescription() {
+		return "Changer de fenetre active";
+	}
 }

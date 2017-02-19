@@ -7,6 +7,10 @@
 	<name>AutomationScenarioAPI</name>
 	<description>Java API to execute scenario from an XML command file</description>
 	<url>http://github.com/matgou/AutomationScenarioAPI</url>
+
+	<properties>
+		<freemarker.version>2.3.23</freemarker.version>
+	</properties>
 	<licenses>
 		<license>
 			<name>The Apache Software License, Version 2.0</name>
@@ -89,6 +93,11 @@
 			<groupId>jaxen</groupId>
 			<artifactId>jaxen</artifactId>
 			<version>1.1.6</version>
+		</dependency>
+		<dependency>
+			<groupId>org.freemarker</groupId>
+			<artifactId>freemarker</artifactId>
+			<version>${freemarker.version}</version>
 		</dependency>
 
 	</dependencies>

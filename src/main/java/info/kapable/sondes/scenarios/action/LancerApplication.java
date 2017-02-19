@@ -17,4 +17,9 @@ public class LancerApplication extends Action {
 		driver.get(this.lanceur_url);
 	}
 
+	@Override
+	public String getDescription() {
+		return "Lancer l'application via l'URL : " + this.lanceur_url;
+	}
+
 }

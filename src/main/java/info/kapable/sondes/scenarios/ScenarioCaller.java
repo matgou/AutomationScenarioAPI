@@ -2,6 +2,8 @@ package info.kapable.sondes.scenarios;
 
 import info.kapable.sondes.drivers.CurlDriver;
 import info.kapable.sondes.scenarios.action.Action;
+import info.kapable.sondes.repports.ActionResult;
+import info.kapable.sondes.repports.Report;
 import info.kapable.sondes.scenarios.action.ScreenshotAction;
 
 import java.io.ByteArrayInputStream;
@@ -11,9 +13,11 @@ import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.lang.reflect.InvocationTargetException;
 import java.nio.file.Files;
+import java.nio.file.NoSuchFileException;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
@@ -45,8 +49,18 @@ public class ScenarioCaller {
 	protected String outputDir = "./";
 	private Map<String, Object> EnvVarsBag;
 	private int navigator = 1;
-	private File outputStatisticFile = null;
+	private Report outputReport = null;
+	private Map<String, String> testDescription;
+	private Map<String, String> envVarsUsed;
 	
+	public Report getOutputReport() {
+		return outputReport;
+	}
+
+	public void setOutputReport(Report outputReport) {
+		this.outputReport = outputReport;
+	}
+
 	public String getOutputDir() {
 		return outputDir;
 	}
@@ -73,7 +87,11 @@ public class ScenarioCaller {
 	public ScenarioCaller(String xml_path, Map<String, Object> EnvVarsBag, String encoding, int navigator) throws ScenarioParsingException {
 		byte[] encoded;
 		try {
-			encoded = Files.readAllBytes(Paths.get(xml_path));
+			try {
+				encoded = Files.readAllBytes(Paths.get(xml_path));
+			} catch (NoSuchFileException e) {
+				throw new ScenarioParsingException("Le fichier scenario est introuvable.");
+			}
 			String xml_cmd = new String(encoded, encoding);
 			
 			this.EnvVarsBag = EnvVarsBag;
@@ -100,6 +118,7 @@ public class ScenarioCaller {
 	
 	private Action xmlToAction(Element action) throws InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, SecurityException, NoSuchMethodException, ClassNotFoundException, ScenarioParsingException
 	{
+		
 		String className = action.getAttribute("class").getValue();
 		Class ActionClass = Class.forName(className);
 		List<Object> params = new ArrayList<Object>();	
@@ -120,7 +139,9 @@ public class ScenarioCaller {
 					String value = param.getAttribute("value").getValue();
 					params.add(By.class.getMethod(selector, String.class).invoke(By.class, value));
 				} else if (type.contentEquals("EnvVar")) {
-					Object value = this.EnvVarsBag.get(param.getAttribute("value").getValue());
+					String key = param.getAttribute("value").getValue();
+					Object value = this.EnvVarsBag.get(key);
+					this.envVarsUsed.put(key, (String) value);
 					if(value == null) {
 						throw new ScenarioParsingException("No environement variable (" + param.getAttribute("value").getValue() + ") found!");
 					}
@@ -146,6 +167,8 @@ public class ScenarioCaller {
 	private ArrayList<Action> BuildAction(String xml_cmd) throws ScenarioParsingException {
 		// TODO Auto-generated method stub
 		ArrayList<Action> actions = new ArrayList<Action>();
+		this.testDescription = new HashMap<String,String>();
+		
 		InputStream stream;
 		try {
 			stream = new ByteArrayInputStream(xml_cmd.getBytes("UTF-8"));
@@ -162,6 +185,18 @@ public class ScenarioCaller {
 			for (Element action : actionsXML) {
 				Action actionToAdd = xmlToAction(action);
 				actions.add(actionToAdd);
+			}
+
+			List<Element> descriptionXML = racine.getChildren("description");
+			if(descriptionXML.size() > 0) {
+				Element descriptions = descriptionXML.get(0);
+				Iterator<Element> descriptionIterator = descriptions.getChildren().iterator();
+				while (descriptionIterator.hasNext()) {
+					Element descriptionElement = descriptionIterator.next();
+					String name = descriptionElement.getName();
+					String value = descriptionElement.getText();
+					this.testDescription.put(name, value);
+				}
 			}
 		} catch (JDOMException e) {
 			e.printStackTrace();
@@ -225,22 +260,28 @@ public class ScenarioCaller {
 		} else throw new UnsuportedNavigatorException();
 				
 		driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
+
+		if(this.outputReport != null)
+			this.outputReport.setTestInfo(this.testDescription);
 		for (Action action : actions) {
+			ActionResult result = new ActionResult();
+			result.setDescription(action.getDescription());
 			try {
-				action.executeAction(driver, this.outputStatisticFile);
+				action.executeAction(driver);
+				result.finishOK();
 			} catch (ScenarioException e) {
-				// TODO Auto-generated catch block
-				Action screenShot = new ScreenshotAction(
-						outputDir + System.getProperty("file.separator") + "erreur.png");
-				try {
-					screenShot.executeAction(driver);
-				} catch (ScenarioException e1) {
-				}
+				
+				if(this.outputReport != null)
+					this.outputReport.finishError(driver, e, result);
+				
 				returnCode = 2;
 				break;
 			}
+			if(this.outputReport != null)
+				this.outputReport.addActionResult(result);
 		}
-
+		if(this.outputReport != null)
+			this.outputReport.finishOK();
 		try {
 			driver.close();
 		} catch (NoSuchWindowException e) {
@@ -250,8 +291,17 @@ public class ScenarioCaller {
 		return returnCode;
 	}
 
-	public void setOutputStatisticFile(File outputStatisticFile) {
-		this.outputStatisticFile = outputStatisticFile;
+	/**
+	 * @return the envVarsUsed
+	 */
+	public Map<String, String> getEnvVarsUsed() {
+		return envVarsUsed;
 	}
 
+	/**
+	 * @param envVarsUsed the envVarsUsed to set
+	 */
+	public void setEnvVarsUsed(Map<String, String> envVarsUsed) {
+		this.envVarsUsed = envVarsUsed;
+	}
 }

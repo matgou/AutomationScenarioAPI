@@ -20,4 +20,9 @@ public class VerifierTitreAction extends Action {
 			throw new ScenarioException(erreur);
 		}
 	}
+
+	@Override
+	public String getDescription() {
+		return "Verifier que le titre de la page contient : " + this.text;
+	}
 }

@@ -1,11 +1,5 @@
 package info.kapable.sondes.run;
 
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
-import info.kapable.sondes.scenarios.ScenarioCaller;
-import info.kapable.sondes.scenarios.ScenarioParsingException;
-import info.kapable.sondes.scenarios.UnsuportedNavigatorException;
-
 import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
@@ -15,9 +9,14 @@ import org.apache.commons.cli.CommandLineParser;
 import org.apache.commons.cli.DefaultParser;
 import org.apache.commons.cli.HelpFormatter;
 import org.apache.commons.cli.Option;
-import org.apache.commons.cli.OptionBuilder;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
+
+import info.kapable.sondes.repports.Report;
+import info.kapable.sondes.repports.WebPageReport;
+import info.kapable.sondes.scenarios.ScenarioCaller;
+import info.kapable.sondes.scenarios.ScenarioParsingException;
+import info.kapable.sondes.scenarios.UnsuportedNavigatorException;
 
 public class Scenario {
 
@@ -113,7 +112,9 @@ public class Scenario {
 			try {
 				caller = new ScenarioCaller(scenarioFilePath, map, "UTF-8", navigatorId);
 				if(outputStatisticFile != null) {
-					caller.setOutputStatisticFile(outputStatisticFile);
+					
+					Report outputReport = new WebPageReport(outputStatisticFile, file.getName().replace(".xml", ""));
+					caller.setOutputReport(outputReport);
 				}
 				int returnCode = caller.launchTest();
 				System.exit(returnCode);

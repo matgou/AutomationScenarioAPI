@@ -46,4 +46,6 @@ public abstract class Action {
 			} // true tells to append data.
 		}
 	}
+
+	public abstract String getDescription();
 }

@@ -40,4 +40,9 @@ public class VerifierImageDesktopAction extends Action {
 		}
 	}
 
+	@Override
+	public String getDescription() {
+		return "Valider que l'image suivante se trouve affiché à l'ecran : <img src='" + this.imgPath + "'></img>";
+	}
+
 }

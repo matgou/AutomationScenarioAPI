@@ -81,4 +81,9 @@ public class VerifierXmlDansPageAction extends Action {
 		}
 	}
 
+	@Override
+	public String getDescription() {
+		return "Verifier que le XML retour contient " + this.xml.toString();
+	}
+
 }

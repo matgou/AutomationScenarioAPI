@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 <Scenario>
+	<description>
+		<short>Test d'un Webservice</short>
+		<long>Ce test envoi une requette POST sur l'url parameté, et verifie que le resultat contient la chaine "HTTPEchoServerTest"</long>
+	</description>
 	<Action class="info.kapable.sondes.scenarios.action.DoPostAction">
 		<param type="EnvVar" value="index" />
 		<param value="Hello World"></param>

@@ -5,6 +5,8 @@ import info.kapable.sondes.drivers.CurlPostRequestWebElement;
 import info.kapable.sondes.scenarios.ScenarioException;
 import info.kapable.sondes.scenarios.UnsuportedNavigatorException;
 
+import java.net.SocketTimeoutException;
+
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 
@@ -18,6 +20,10 @@ public class DoPostAction extends Action {
 		this.raw = raw;
 	}
 
+	public String getDescription() {
+		return "Execute une requette HTTP Post sur l'url : " + this.url;
+	}
+	
 	@Override
 	public void executeAction(WebDriver driver) throws ScenarioException {
 		try {

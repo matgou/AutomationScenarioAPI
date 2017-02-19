@@ -41,4 +41,9 @@ public class ScreenshotAction extends Action {
 			this.logEvent("Error", "Error when making the screenshoot : " + e.getMessage());
 		}
 	}
+
+	@Override
+	public String getDescription() {
+		return "Prendre une capture d'ecran";
+	}
 }

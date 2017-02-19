@@ -45,4 +45,9 @@ public class CliquerDesktopAction extends Action {
 
 	}
 
+	@Override
+	public String getDescription() {
+		return "Cliquer sur l'image : <img src='" + this.imgPath + "'></img>";
+	}
+
 }

@@ -33,4 +33,9 @@ public class IfAction extends Action {
 		}
 	}
 
+	@Override
+	public String getDescription() {
+		return "Execution conditionelle si " + this.textAttendu;
+	}
+
 }
