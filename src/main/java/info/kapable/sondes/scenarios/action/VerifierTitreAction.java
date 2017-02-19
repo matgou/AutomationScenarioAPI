@@ -15,7 +15,7 @@ public class VerifierTitreAction extends Action {
 
 	@Override
 	public void executeAction(WebDriver driver) throws ScenarioException {
-		this.logEvent("Firefox", "Verification Titre pr�sent :  " + text);
+		this.logEvent("Firefox", "Verification Titre prï¿½sent :  " + text);
 		if (!driver.getTitle().contains(text)) {
 			throw new ScenarioException(erreur);
 		}

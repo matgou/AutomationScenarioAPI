@@ -19,7 +19,7 @@ public class IfAction extends Action {
 
 	@Override
 	public void executeAction(WebDriver driver) throws ScenarioException {
-		this.logEvent("Firefox", "Verification Texte pr�sent :  " + this.textAttendu);
+		this.logEvent("Firefox", "Verification Texte prï¿½sent :  " + this.textAttendu);
 		if (driver.getPageSource().contains(this.textAttendu)) {
 			this.logEvent("Firefox", "Found");
 			for (Action action : this.thenAction) {
