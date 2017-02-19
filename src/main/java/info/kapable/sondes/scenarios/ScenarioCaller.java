@@ -123,6 +123,7 @@ public class ScenarioCaller {
 		Class ActionClass = Class.forName(className);
 		List<Object> params = new ArrayList<Object>();	
 		List<Element> paramsXML = action.getChildren("param");
+		this.envVarsUsed = new HashMap<String, String>();
 		for (Element param : paramsXML) {
 			if (param.getAttribute("type") == null) {
 				if(param.getAttribute("value") != null) {
