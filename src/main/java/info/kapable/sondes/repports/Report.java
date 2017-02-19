@@ -33,4 +33,10 @@ public abstract class Report {
 	 * @param testDescription
 	 */
 	public abstract void setTestInfo(Map<String, String> testDescription);
+	
+	/**
+	 * 
+	 * 
+	 */
+	public abstract void setEnvVars(Map<String, String> envVars);
 }

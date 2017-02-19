@@ -28,6 +28,12 @@ public class WebPageReport extends Report {
 	private File folder;
 	private String filename;
 	private List<ActionResult> results;
+	private Map<String, String> envVars;
+	
+	public Map<String, String> getEnvVars() {
+		return envVars;
+	}
+
 	public List<ActionResult> getResults() {
 		return results;
 	}
@@ -50,6 +56,10 @@ public class WebPageReport extends Report {
 	public void putInfo(String param, String value) {
 		this.testInfo.put(param, value);
 	}
+	
+	public void setEnvVars(Map<String, String> envVars) {
+		this.envVars = envVars;
+	}
 
 	public WebPageReport(File folder, String filename) {
 		super();
@@ -57,6 +67,7 @@ public class WebPageReport extends Report {
 		this.setFilename(filename);
 		this.results = new ArrayList<ActionResult>();
 		this.testInfo = new HashMap<String,String>();
+		this.envVars = new HashMap<String, String>();
 	}
 
 	@Override

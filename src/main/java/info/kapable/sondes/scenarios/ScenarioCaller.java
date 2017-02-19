@@ -123,7 +123,6 @@ public class ScenarioCaller {
 		Class ActionClass = Class.forName(className);
 		List<Object> params = new ArrayList<Object>();	
 		List<Element> paramsXML = action.getChildren("param");
-		this.envVarsUsed = new HashMap<String, String>();
 		for (Element param : paramsXML) {
 			if (param.getAttribute("type") == null) {
 				if(param.getAttribute("value") != null) {
@@ -169,6 +168,8 @@ public class ScenarioCaller {
 		// TODO Auto-generated method stub
 		ArrayList<Action> actions = new ArrayList<Action>();
 		this.testDescription = new HashMap<String,String>();
+
+		this.envVarsUsed = new HashMap<String, String>();
 		
 		InputStream stream;
 		try {
@@ -262,8 +263,10 @@ public class ScenarioCaller {
 				
 		driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
 
-		if(this.outputReport != null)
+		if(this.outputReport != null) {
 			this.outputReport.setTestInfo(this.testDescription);
+			this.outputReport.setEnvVars(this.envVarsUsed);
+		}
 		for (Action action : actions) {
 			ActionResult result = new ActionResult();
 			result.setDescription(action.getDescription());

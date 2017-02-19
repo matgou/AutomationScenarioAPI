@@ -34,10 +34,11 @@
     </tr>
     <tr>
       <td style="width: 392px;" colspan="1" rowspan="3">Variables
-d'environnement utilisé :<br>
+d'environnements utilisées :<br>
       <ul>
-        <li>index :
-https://data.kapable.info/index.php/s/NTlhGtl1ZN5QTQx/download</li>
+      	<#list envVars?keys as key>
+        <li>${key} : ${envVars[key]}</li>
+        </#list>
       </ul>
       </td>
       <td style="width: 179px;">Durée du test</td>
@@ -77,8 +78,10 @@ https://data.kapable.info/index.php/s/NTlhGtl1ZN5QTQx/download</li>
   </tbody>
 </table>
 <br>
+<#if OK == false>
 <h2>Capture de l'erreur :</h2>
 <img style="width: 800px; height: 450px;" alt="Erreur"
  src="erreur.png"><br>
+</#if>
 </body>
 </html>
