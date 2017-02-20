@@ -153,7 +153,7 @@ public class Scenario {
 				}
 
 				if(outputStatisticJsonFile != null) {
-					Report outputReportJson = new JsonPageReport(outputStatisticHTMLFile);
+					Report outputReportJson = new JsonPageReport(outputStatisticJsonFile);
 					outputReport.addOutputReport(outputReportJson);
 				}
 				caller.setOutputReport(outputReport);
