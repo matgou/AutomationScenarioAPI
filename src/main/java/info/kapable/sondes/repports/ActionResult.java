@@ -53,8 +53,13 @@ public class ActionResult {
 		this.erreur = e.getErreur();
 	}
 
-	public String getDurationStr() {
+	public Long getDuration() {		
 		Long duration = this.endTimeMillis - this.startTimeMillis;
+		return duration;
+	}
+
+	public String getDurationStr() {
+		Long duration = this.getDuration();
 		Long minutes = duration / (60 * 1000);
 		Long secondes = (duration - minutes * (60 * 1000))/ (1000);
 		return minutes + "minutes, " + secondes + " secondes";

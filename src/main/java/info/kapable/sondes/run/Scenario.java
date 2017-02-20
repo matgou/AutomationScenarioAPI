@@ -12,8 +12,11 @@ import org.apache.commons.cli.Option;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
 
+import info.kapable.sondes.repports.JsonPageReport;
+import info.kapable.sondes.repports.MultiOutputReport;
 import info.kapable.sondes.repports.Report;
 import info.kapable.sondes.repports.WebPageReport;
+import info.kapable.sondes.repports.XMLPageReport;
 import info.kapable.sondes.scenarios.ScenarioCaller;
 import info.kapable.sondes.scenarios.ScenarioParsingException;
 import info.kapable.sondes.scenarios.UnsuportedNavigatorException;
@@ -61,16 +64,30 @@ public class Scenario {
 				.hasArg()
 				.argName( "navigator" )
 				.build();
-		Option statisticOption = Option.builder("s")
-				.longOpt("statistic")
-				.desc("File to export statistic")
+		Option statisticHtmlOption = Option.builder("h")
+				.longOpt("statistic-html")
+				.desc("File to export statistic as HTML")
 				.hasArg()
-				.argName( "statistic" )
+				.argName( "statistic-html" )
 				.build();
-
+		Option statisticXmlOption = Option.builder("x")
+				.longOpt("statistic-xml")
+				.desc("File to export statistic as XML")
+				.hasArg()
+				.argName( "statistic-xml" )
+				.build();
+		Option statisticJsonOption = Option.builder("j")
+				.longOpt("statistic-json")
+				.desc("File to export statistic as JSON")
+				.hasArg()
+				.argName( "statistic-json" )
+				.build();
+		
 		options.addOption( scenarioFileOption );
 		options.addOption( navigatorOption );
-		options.addOption( statisticOption );
+		options.addOption( statisticHtmlOption );
+		options.addOption( statisticXmlOption );
+		options.addOption( statisticJsonOption );
 		
 	    CommandLineParser parser = new DefaultParser();
 		return parser.parse( options, args );
@@ -82,7 +99,9 @@ public class Scenario {
 	    /* Default navigator */
 	    int navigatorId = ScenarioCaller.FIREFOX;
 	    /* Default statistic file */
-		File outputStatisticFile = null;
+		File outputStatisticHTMLFile = null;
+		File outputStatisticXMLFile = null;
+		File outputStatisticJsonFile = null;
 	    File file;
         try {
         	line = option(args);
@@ -94,8 +113,18 @@ public class Scenario {
 			}
 			
 			// Optional Statistic file
-			if(line.hasOption("statistic")) {
-				outputStatisticFile = new File(line.getOptionValue("statistic"));
+			if(line.hasOption("statistic-html")) {
+				outputStatisticHTMLFile = new File(line.getOptionValue("statistic-html"));
+			}
+
+			// Optional Statistic file
+			if(line.hasOption("statistic-xml")) {
+				outputStatisticXMLFile = new File(line.getOptionValue("statistic-xml"));
+			}
+
+			// Optional Statistic file
+			if(line.hasOption("statistic-json")) {
+				outputStatisticJsonFile = new File(line.getOptionValue("statistic-json"));
 			}
 			
 			// Scenario file
@@ -111,11 +140,24 @@ public class Scenario {
 			}
 			try {
 				caller = new ScenarioCaller(scenarioFilePath, map, "UTF-8", navigatorId);
-				if(outputStatisticFile != null) {
-					
-					Report outputReport = new WebPageReport(outputStatisticFile, file.getName().replace(".xml", ""));
-					caller.setOutputReport(outputReport);
+				MultiOutputReport outputReport = new MultiOutputReport();
+				
+				if(outputStatisticHTMLFile != null) {
+					Report outputReportHTML = new WebPageReport(outputStatisticHTMLFile);
+					outputReport.addOutputReport(outputReportHTML);
 				}
+
+				if(outputStatisticXMLFile != null) {
+					Report outputReportXML = new XMLPageReport(outputStatisticXMLFile);
+					outputReport.addOutputReport(outputReportXML);
+				}
+
+				if(outputStatisticJsonFile != null) {
+					Report outputReportJson = new JsonPageReport(outputStatisticHTMLFile);
+					outputReport.addOutputReport(outputReportJson);
+				}
+				caller.setOutputReport(outputReport);
+
 				int returnCode = caller.launchTest();
 				System.exit(returnCode);
 			} catch (ScenarioParsingException e) {
